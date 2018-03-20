@@ -19,64 +19,76 @@ public class MovieDatabaseSummarizer {
         MovieParser movieParser = new MovieParser();
         ActorParser actorParser = new ActorParser();
 
-        List<Movie> movies = movieParser.asList("src/oop/opencoding/pset1/data/movies.csv");
-        List<Actor> actors = actorParser.asList("src/oop/opencoding/pset1/data/actors.csv");
+        List <Movie> movies = movieParser.asList("src\\main\\java\\at\\refugeescode\\javapsettests\\pset1\\data\\movies.csv");
+        List <Actor> actors = actorParser.asList("src\\main\\java\\at\\refugeescode\\javapsettests\\pset1\\data\\actors.csv");
 
         Summary summary = new Summary();
         summary.setNumberOfMovies(movies.size());
         summary.setNumberOfActors(actors.size());
-        summary.setMostRatedMovies(getMostRated(movies));
-        summary.setMostHiredActors(getMostHired(actors));
-        summary.setMostAppearingGenres(getMostAppearingGenres(movies));
-        summary.setMaleFemaleRatio(getMaleFemaleRatio(actors));
+        summary.setMostRatedMovies(util.getMostRated(movies));
+        summary.setMostHiredActors(util.getMostHired(actors));
+        summary.setMostAppearingGenres(util.getMostAppearingGenres(movies));
+        summary.setMaleFemaleRatio(util.getMaleFemaleRatio(actors));
         return summary;
     }
 
-    private List<String> getMostRated(List<Movie> movies) {
-        return movies.stream()
-                .sorted((e1, e2) -> e2.getRating().compareTo(e1.getRating()))
-                .limit(5)
-                .map(e -> e.getTitle() + " (" + e.getRating() + ")")
-                .collect(Collectors.toList());
+    public class Util {
+
+        public List <Movie> movies;
+        public List <Actor> actors;
+
+        public List <String> getMostRated(List <Movie> movies) {
+            return movies.stream()
+                    .sorted((e1, e2) -> e2.getRating().compareTo(e1.getRating()))
+                    .limit(5)
+                    .map(e -> e.getTitle() + " (" + e.getRating() + ")")
+                    .collect(Collectors.toList());
+        }
+
+        public List <String> getMostHired(List <Actor> actors) {
+            return actors.stream()
+                    .map(actor -> actor.getName())
+                    .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
+                    .entrySet().stream()
+                    .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                    .limit(5)
+                    .map(e -> e.getKey() + " (" + e.getValue() + ")")
+                    .collect(Collectors.toList());
+        }
+
+        public List <String> getMostAppearingGenres(List <Movie> movies) {
+            return movies.stream()
+                    .map(movie -> movie.getGenres())
+                    .flatMap(genres -> genres.stream())
+                    .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
+                    .entrySet().stream()
+                    .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                    .limit(2)
+                    .map(e -> e.getKey() + " (" + e.getValue() + ")")
+                    .collect(Collectors.toList());
+        }
+
+        public String getMaleFemaleRatio(List <Actor> actors) {
+            double size = actors.size();
+            return actors.stream()
+                    .map(actor -> actor.getGender())
+                    .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
+                    .entrySet().stream()
+                    .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                    .map(e -> getPercentage(size, e) + e.getKey().toString().toLowerCase())
+                    .collect(Collectors.joining(", "));
+        }
+
+        private String getPercentage(double size, Map.Entry <Gender, Long> e) {
+            double percentage = e.getValue() / size;
+            NumberFormat formatter = new DecimalFormat("0.0 %");
+            return formatter.format(percentage);
+        }
     }
 
-    private List<String> getMostHired(List<Actor> actors) {
-        return actors.stream()
-                .map(actor -> actor.getName())
-                .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
-                .entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .limit(5)
-                .map(e -> e.getKey() + " (" + e.getValue() + ")")
-                .collect(Collectors.toList());
-    }
+    private Util util = new Util();
 
-    private List<String> getMostAppearingGenres(List<Movie> movies) {
-        return movies.stream()
-                .map(movie -> movie.getGenres())
-                .flatMap(genres -> genres.stream())
-                .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
-                .entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .limit(2)
-                .map(e -> e.getKey() + " (" + e.getValue() + ")")
-                .collect(Collectors.toList());
-    }
-
-    private String getMaleFemaleRatio(List<Actor> actors) {
-        double size = actors.size();
-        return actors.stream()
-                .map(actor -> actor.getGender())
-                .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
-                .entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .map(e -> getPercentage(size, e) + e.getKey().toString().toLowerCase())
-                .collect(Collectors.joining(", "));
-    }
-
-    private String getPercentage(double size, Map.Entry<Gender, Long> e) {
-        double percentage = e.getValue() / size;
-        NumberFormat formatter = new DecimalFormat("0.0 %");
-        return formatter.format(percentage);
+    public Util getUtil() {
+        return util;
     }
 }

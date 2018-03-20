@@ -8,6 +8,15 @@ public class Movie {
     private Set<String> genres;
     private Double rating;
 
+    public Movie(String title, Set <String> genres, Double rating) {
+        this.title = title;
+        this.genres = genres;
+        this.rating = rating;
+    }
+
+    public Movie() {
+    }
+
     public String getTitle() {
         return title;
     }

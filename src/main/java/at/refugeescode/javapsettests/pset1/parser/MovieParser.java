@@ -30,8 +30,6 @@ public class MovieParser extends AbstractParser<Movie> {
         return Stream.of(columns)
                 .filter(field -> field.contains("'name':"))
                 .map(genre -> genre.replaceAll("'name':", ""))
-//                .map(genre -> genre.replaceAll("\\{", ""))
-//                .map(genre -> genre.replaceAll("\\[", ""))
                 .map(genre -> genre.replaceAll("]", ""))
                 .map(genre -> genre.replaceAll("}", ""))
                 .map(genre -> genre.replaceAll("'", ""))
