@@ -5,6 +5,14 @@ public class Actor {
     private String name;
     private Gender gender;
 
+    public Actor(String name, Gender gender) {
+        this.name = name;
+        this.gender = gender;
+    }
+
+    public Actor() {
+    }
+
     public String getName() {
         return name;
     }

@@ -1,6 +1,7 @@
 package at.refugeescode.javapsettests.pset1.controller;
 
 import at.refugeescode.javapsettests.pset1.model.Actor;
+import at.refugeescode.javapsettests.pset1.model.Gender;
 import at.refugeescode.javapsettests.pset1.model.Movie;
 import at.refugeescode.javapsettests.pset1.model.Summary;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,16 @@ class MovieDatabaseSummarizerTest {
                 new Movie("Baby Boss",geners2,10.0 ),
                 new Movie("Star War",geners3,7.0 )
         ));
+
+        actors = new LinkedList <Actor>();
+        this.actors.addAll(Arrays.asList(
+                new Actor("Anjelina Jolie", Gender.FEMALE),
+                new Actor("Brad Pet", Gender.MALE),
+                new Actor("Julia Roberts", Gender.FEMALE),
+                new Actor("Anjelina Jolie", Gender.FEMALE),
+                new Actor("Brad Pet", Gender.MALE)
+        ));
+
         movieDatabaseSummarizer = new MovieDatabaseSummarizer();
 
     }
@@ -51,9 +62,20 @@ class MovieDatabaseSummarizerTest {
         List<String> myGenres = new LinkedList <String>();
         myGenres.addAll(Arrays.asList("History (3)", "Comedy (2)"));
         assertEquals(mostAppearingGenres, myGenres);
-
         }
 
+    @Test
+    void testMostHired(){
+        List <String> mostHired = movieDatabaseSummarizer.getUtil().getMostHired(actors);
+        List <String> myActors = new LinkedList <String>();
+        myActors.addAll(Arrays.asList("Brad Pet (2)", "Anjelina Jolie (2)", "Julia Roberts (1)"));
+        assertEquals(mostHired, myActors);
+    }
 
+    @Test
+    void testMaleFemaleRatio (){
+        String maleFemaleRatio = movieDatabaseSummarizer.getUtil().getMaleFemaleRatio(actors);
+        assertEquals(maleFemaleRatio, "60.0 %female, 40.0 %male");
+    }
 }
 
