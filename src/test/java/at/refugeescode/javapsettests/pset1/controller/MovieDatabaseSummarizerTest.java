@@ -3,11 +3,9 @@ package at.refugeescode.javapsettests.pset1.controller;
 import at.refugeescode.javapsettests.pset1.model.Actor;
 import at.refugeescode.javapsettests.pset1.model.Gender;
 import at.refugeescode.javapsettests.pset1.model.Movie;
-import at.refugeescode.javapsettests.pset1.model.Summary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
